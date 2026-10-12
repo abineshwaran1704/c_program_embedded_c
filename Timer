@@ -1,0 +1,36 @@
+#include <reg51.h>
+
+sbit LED = P1^0;
+
+void timer0_delay_1ms(void)
+{
+    TMOD = (TMOD & 0xF0) | 0x01;
+
+    TH0 = 0xFC;
+    TL0 = 0x18;
+
+    TF0 = 0;
+    TR0 = 1;
+
+    while (TF0 == 0);
+
+    TR0 = 0;
+    TF0 = 0;
+}
+
+void main(void)
+{
+    unsigned int i;
+
+    LED = 0;
+
+    while (1)
+    {
+        for (i = 0; i < 500; i++)
+        {
+            timer0_delay_1ms();
+        }
+
+        LED = !LED;
+    }
+}
